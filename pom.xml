@@ -14,6 +14,7 @@
 
 	<modules>
 		<module>patient-service</module>
+		<module>billing-service</module>
 		<!-- add more modules later here -->
 	</modules>
 
