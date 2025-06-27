@@ -1,4 +1,4 @@
--- Ensure the 'users' table exists
+-- Ensure the 'users_auth' table exists
 CREATE TABLE IF NOT EXISTS "users_auth" (
     id UUID PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS "users_auth" (
 
 -- Insert the user if no existing user with the same id or email exists
 INSERT INTO "users_auth" (id, email, password, role)
-SELECT '223e4567-e89b-12d3-a456-426614174006', 'testuser@test.com',
-       '$2b$12$7hoRZfJrRKD2nIm2vHLs7OBETy.LWenXXMLKf99W8M4PUwO6KB7fu', 'ADMIN'
+SELECT '223e4567-e89b-12d3-a456-426614174006',
+       'testuser@test.com',
+       '$2b$12$7hoRZfJrRKD2nIm2vHLs7OBETy.LWenXXMLKf99W8M4PUwO6KB7fu',
+       'ADMIN'
 WHERE NOT EXISTS (
     SELECT 1
-    FROM "users"
+    FROM "users_auth"
     WHERE id = '223e4567-e89b-12d3-a456-426614174006'
        OR email = 'testuser@test.com'
 );
-
-
