@@ -3,6 +3,7 @@ package com.pm.auth_service.service;
 
 import com.pm.auth_service.dto.LoginRequestDTO;
 import com.pm.auth_service.model.User;
+import com.pm.auth_service.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +13,20 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(UserService userService){
+    public AuthService(UserService userService,PasswordEncoder passwordEncoder,JwtUtil jwtUtil){
         this.userService=userService;
+        this.passwordEncoder=passwordEncoder;
+        this.jwtUtil=jwtUtil;
     }
 
 
     public Optional<String> authenticate(LoginRequestDTO loginRequestDTO){
         Optional<String> token= userService
                 .findByEmail(loginRequestDTO.getEmail())
-                .filter(u -> PasswordEncoder.matches(loginRequestDTO.getPassword(),
+                .filter(u -> passwordEncoder.matches(loginRequestDTO.getPassword(),
                 u.getPassword()))
                 .map(u->jwtUtil.generateToken(u.getEmail(),u.getRole()));
 
