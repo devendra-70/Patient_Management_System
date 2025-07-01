@@ -30,6 +30,9 @@ public class AuthService {
                 u.getPassword()))
                 .map(u->jwtUtil.generateToken(u.getEmail(),u.getRole()));
 
+        System.out.println("User found: " + userService.findByEmail(loginRequestDTO.getEmail()));
+
+
         return token;
 
     }
