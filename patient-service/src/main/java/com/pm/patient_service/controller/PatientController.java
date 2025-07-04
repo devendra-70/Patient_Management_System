@@ -61,6 +61,17 @@ public class PatientController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/search")
+    @Operation(summary = "Search Patients by name or email")
+    public ResponseEntity<List<PatientResponseDTO>> searchPatients(
+            @RequestParam("query") String query,
+            @RequestParam("flag") String flag) {
+
+        List<PatientResponseDTO> results = patientService.searchPatients(query, flag);
+        return ResponseEntity.ok(results);
+    }
+
+
 
 
 }

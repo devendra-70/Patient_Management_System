@@ -80,5 +80,22 @@ public class PatientService {
         patientRepository.deleteById(id);
     }
 
+    public List<PatientResponseDTO> searchPatients(String query, String flag) {
+        List<Patient> patients;
+
+        if ("name".equalsIgnoreCase(flag)) {
+            patients = patientRepository.findByNameContainingIgnoreCase(query);
+        } else if ("email".equalsIgnoreCase(flag)) {
+            patients = patientRepository.findByEmailContainingIgnoreCase(query);
+        } else {
+            throw new IllegalArgumentException("Invalid flag: must be 'name' or 'email'");
+        }
+
+        return patients.stream()
+                .map(PatientMapper::toDTO)
+                .toList();
+    }
+
+
 }
 
