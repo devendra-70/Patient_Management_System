@@ -100,12 +100,23 @@ public class PatientService {
         Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new PatientNotFoundException("Patient not found with email: " + email));
 
-        patient.setName(dto.getName());
-        patient.setAddress(dto.getAddress());
-        patient.setDateOfBirth(LocalDate.parse(dto.getDateOfBirth()));
+        // Update name only if provided
+        if (dto.getName() != null && !dto.getName().isBlank()) {
+            patient.setName(dto.getName());
+        }
 
-        // Validate unique email if changing
-        if (!patient.getEmail().equals(dto.getEmail())) {
+        // Update address only if provided
+        if (dto.getAddress() != null && !dto.getAddress().isBlank()) {
+            patient.setAddress(dto.getAddress());
+        }
+
+        // Update date of birth only if provided
+        if (dto.getDateOfBirth() != null && !dto.getDateOfBirth().isBlank()) {
+            patient.setDateOfBirth(LocalDate.parse(dto.getDateOfBirth()));
+        }
+
+        // If email changed and is provided
+        if (dto.getEmail() != null && !dto.getEmail().isBlank() && !dto.getEmail().equals(patient.getEmail())) {
             if (patientRepository.existsByEmail(dto.getEmail())) {
                 throw new EmailAlreadyExistsException("A patient with this email already exists: " + dto.getEmail());
             }
@@ -115,6 +126,15 @@ public class PatientService {
         Patient updatedPatient = patientRepository.save(patient);
         return PatientMapper.toDTO(updatedPatient);
     }
+
+
+    public void deletePatientByEmail(String email) {
+        Patient patient = patientRepository.findByEmail(email)
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found with email: " + email));
+        patientRepository.deleteById(patient.getId());
+    }
+
+
 
 
 

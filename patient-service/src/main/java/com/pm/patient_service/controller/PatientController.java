@@ -81,6 +81,14 @@ public class PatientController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/delete-by-email")
+    @Operation(summary = "Delete patient by email")
+    public ResponseEntity<Void> deletePatientByEmail(@RequestParam("email") String email) {
+        patientService.deletePatientByEmail(email);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 
 
