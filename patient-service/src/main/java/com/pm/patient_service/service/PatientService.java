@@ -96,6 +96,27 @@ public class PatientService {
                 .toList();
     }
 
+    public PatientResponseDTO updatePatientByEmail(String email, PatientRequestDTO dto) {
+        Patient patient = patientRepository.findByEmail(email)
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found with email: " + email));
+
+        patient.setName(dto.getName());
+        patient.setAddress(dto.getAddress());
+        patient.setDateOfBirth(LocalDate.parse(dto.getDateOfBirth()));
+
+        // Validate unique email if changing
+        if (!patient.getEmail().equals(dto.getEmail())) {
+            if (patientRepository.existsByEmail(dto.getEmail())) {
+                throw new EmailAlreadyExistsException("A patient with this email already exists: " + dto.getEmail());
+            }
+            patient.setEmail(dto.getEmail());
+        }
+
+        Patient updatedPatient = patientRepository.save(patient);
+        return PatientMapper.toDTO(updatedPatient);
+    }
+
+
 
 }
 

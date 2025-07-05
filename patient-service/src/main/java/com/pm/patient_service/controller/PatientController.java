@@ -71,6 +71,17 @@ public class PatientController {
         return ResponseEntity.ok(results);
     }
 
+    @PutMapping("/update-by-email")
+    @Operation(summary = "Update patient by email")
+    public ResponseEntity<PatientResponseDTO> updatePatientByEmail(
+            @RequestParam("email") String email,
+            @RequestBody @Validated PatientRequestDTO dto) {
+
+        PatientResponseDTO response = patientService.updatePatientByEmail(email, dto);
+        return ResponseEntity.ok(response);
+    }
+
+
 
 
 
